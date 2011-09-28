@@ -1,7 +1,7 @@
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"]."/twitteroauth.php");
-//require_once($_SERVER["DOCUMENT_ROOT"]."/oAuth.php");
 
+// Registre o aplicativo no Twitter em https://dev.twitter.com/apps e informe as chaves necessárias para que o Bot do Uptime conecte-se a sua conta no Twitter.
 $consumerKey = 'consumer-key';
 $consumerSecret = 'consumer-secret';
 $oAuthToken = 'oauth-token';
@@ -20,7 +20,7 @@ $dm = 1;
 // Caso $dm = 1, preencha o campo abaixo com o usuário que receberá a DM sem o @. Ex.: BotdoUptime
 $userdm = "BotdoUptime";
 
-// 10 é o tempo de espera de resposta. Mude-o se julgar necessário.
+// Aqui é feita a conexão com o servidor que será monitorado. 10 é o tempo de espera da resposta em segundos. Modifique se julgar necessário.
 $ch = curl_init($url);  
 	  curl_setopt($ch, CURLOPT_TIMEOUT, 10);  
 	  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);  
@@ -36,7 +36,7 @@ if($httpcode >= 200 && $httpcode < 400){
 	$mensagem = "O servidor $nome est&aacute; operante! &ndash; C&oacute;digo: $httpcode";
 	
 	if($tweetar = 1) {
-		// O tweet é enviado se o servidor monitorado estiver ativo. Se desejar, comente as 5 linhas abaixo para que o bot NÃO envie um tweet caso o servidor monitorado esteja ativo.
+		// O tweet é enviado se o servidor monitorado estiver ativo.
 		$tweet->post("statuses/update", array("status" => "$mensagem"));
 		if(property_exists($tweet, "error")) {
   	  		echo "N&atilde;o foi poss&iacute;vel tweetar a seguinte mensagem:<br />$mensagem<br /><br />";
@@ -46,6 +46,7 @@ if($httpcode >= 200 && $httpcode < 400){
    	}
    	
     if($dm = 1) {
+    	// A DM é enviada se o servidor monitorado estiver ativo.
     	$tweet->post("direct_messages/new", array("text" => "$mensagem", "screen_name" => "$userdm"));
     	if(property_exists($tweet, "error") ) {
   	  		echo "N&atilde;o foi poss&iacute;vel enviar uma DM para $userdm com a seguinte mensagem:<br />$mensagem<br /><br />";
@@ -60,7 +61,7 @@ if($httpcode >= 200 && $httpcode < 400){
 	$mensagem = "Ops, acho que o servidor $nome est&aacute; fora do ar! &ndash; C&oacute;digo: $httpcode";
 	
 	if($tweetar = 1) {
-		// O tweet é enviado se o servidor monitorado estiver fora do ar. Se desejar, comente as 5 linhas abaixo para que o bot NÃO envie um tweet caso o servidor monitorado esteja fora do ar.
+		// O tweet é enviado se o servidor monitorado estiver fora do ar.
 		$tweet->post("statuses/update", array("status" => "$mensagem"));
 		if(property_exists($tweet, "error") ) {
   	  		echo "N&atilde;o foi poss&iacute;vel tweetar a seguinte mensagem:<br />$mensagem<br /><br />";
@@ -70,6 +71,7 @@ if($httpcode >= 200 && $httpcode < 400){
     }
     
     if($dm = 1) {
+    	// A DM é enviada se o servidor monitorado estiver fora do ar.
     	$tweet->post("direct_messages/new", array("text" => "$mensagem", "screen_name" => "$userdm"));
     	if(property_exists($tweet, "error") ) {
   	  		echo "N&atilde;o foi poss&iacute;vel enviar uma DM para $userdm com a seguinte mensagem:<br />$mensagem<br /><br />";
